@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Device Information</title>
+    <link rel="stylesheet" href="/Stylesheets/style.css" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const socket = io();
+
+        // Listen for 'dataUpdate' events from the server
+        socket.on("dataUpdate", (data) => {
+          // Update the existing card elements with new data
+          document.getElementById("connectivity-status").innerText =
+            data.connection ? "Connected" : "Disconnected";
+          document.getElementById("gas-level").innerText = data.gasLevel;
+          document.getElementById("power-status").innerText = data.powerStatus
+            ? "ON"
+            : "OFF";
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1 class="title">Device Information</h1>
+
+    <div class="card-container">
+      <% if (data) { %>
+      <div class="card">
+        <div class="card-header">
+          <img src="/SVGs/Edit.svg" alt="Edit Icon" />
+          <h3>Sensor Status</h3>
+        </div>
+        <h5 id="connectivity-status">
+          <%= data.connection ? "Connected" : "Disconnected" %>
+        </h5>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <img src="/SVGs/Flame.svg" alt="Flame Icon" />
+          <h3>Gas Level</h3>
+        </div>
+        <h5 id="gas-level"><%= data.gasLevel %></h5>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <img src="/SVGs/Switch.svg" alt="Power Icon" />
+          <h3>Power Status</h3>
+        </div>
+        <h5 id="power-status"><%= data.powerStatus ? "ON" : "OFF" %></h5>
+      </div>
+      <% } else { %>
+      <p>No data available.</p>
+      <% } %>
+    </div>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script src="/JavaScripts/script.js"></script>
+</html>
